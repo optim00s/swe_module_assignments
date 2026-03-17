@@ -1,8 +1,3 @@
-"""
-Assignment 3.1 — Multi-API Dashboard: NASA + GitHub + OpenRouter
-Week 2, Day 3
-"""
-
     payload = {
         "model": "google/gemma-3-4b-it:free",  # pulsuz model
         "messages": [

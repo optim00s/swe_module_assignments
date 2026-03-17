@@ -1,8 +1,3 @@
-"""
-Assignment 3.1 — Bug Ovçusu: Buglı Kodu Düzəlt
-Week 5, Day 3
-"""
-
 import logging
 from datetime import datetime, timedelta
 from collections import defaultdict

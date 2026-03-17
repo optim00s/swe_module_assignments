@@ -1,8 +1,3 @@
-"""
-Assignment 2.2 — İnventar İdarəetmə Sistemi
-Week 1, Day 2
-"""
-
 inventory = {
     "SKU001": {"name": "Mexanik Klaviatura", "price": 89.99, "qty": 45, "category": "Elektronika", "supplier": "TechCo"},
     "SKU002": {"name": "Simsiz Siçan", "price": 34.50, "qty": 120, "category": "Elektronika", "supplier": "TechCo"},

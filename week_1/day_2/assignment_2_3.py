@@ -1,8 +1,3 @@
-"""
-Assignment 2.3 — Şəhər Hava Məlumatları Analizi
-Week 1, Day 2
-"""
-
 weather_data = {
     "Bakı": {
         "temps": [12, 14, 11, 15, 13, 16, 14],

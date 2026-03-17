@@ -1,8 +1,3 @@
-"""
-Assignment 3.1 — Log Faylı Analiz Sistemi
-Week 1, Day 3
-"""
-
 raw_logs = [
     "2026-03-10 08:15:22 INFO  UserService Login successful user=eli.hasanov ip=192.168.1.10",
     "2026-03-10 08:15:45 ERROR DatabaseService Connection timeout db=main retry=3",

@@ -1,8 +1,3 @@
-"""
-Assignment 2.2 — Şablon Mühərriki (Template Engine)
-Week 3, Day 2
-"""
-
 templates = {
     "report": """
     <h1>{{title}}</h1>

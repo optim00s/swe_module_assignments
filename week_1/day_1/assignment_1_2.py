@@ -1,8 +1,3 @@
-"""
-Assignment 1.2 — Matris Əməliyyatları (Funksiyanlarla)
-Week 1, Day 1
-"""
-
 matrix_a = [
     [3, 7, 1],
     [5, 2, 8],

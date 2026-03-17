@@ -1,8 +1,3 @@
-"""
-Assignment 3.3 — Debug Detective: Performans Analizi
-Week 5, Day 3
-"""
-
 import time, random
 
 def slow_search(data, target):

@@ -1,8 +1,3 @@
-"""
-Assignment 2.3 — Asinxron Event-Driven Sistem
-Week 4, Day 2
-"""
-
 events_stream = [
     {"type": "order.created", "data": {"id": "ORD-501", "customer": "Əli", "total": 250.00, "items": ["Laptop çantası", "USB hub"]}},
     {"type": "payment.received", "data": {"order_id": "ORD-501", "amount": 250.00, "method": "card"}},

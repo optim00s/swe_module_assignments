@@ -1,8 +1,3 @@
-"""
-Assignment 2.3 — Integration Test Layihəsi
-Week 5, Day 2
-"""
-
 # ecommerce.py
 class Product:
     def __init__(self, sku, name, price, stock):

@@ -1,8 +1,3 @@
-"""
-Assignment 2.1 — Plugin Sistemi
-Week 3, Day 2
-"""
-
 pipeline_config = {
     "plugins": [
         {"name": "TextTransform", "version": "1.0", "enabled": True, "priority": 1, "settings": {"operation": "uppercase"}},

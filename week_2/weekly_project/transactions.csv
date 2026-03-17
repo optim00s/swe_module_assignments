@@ -1,0 +1,18 @@
+date,type,category,description,amount,currency
+2026-03-01,income,Maaş,Əsas iş maaşı,2500.00,AZN
+2026-03-01,expense,Kirayə,Ev kirayəsi,800.00,AZN
+2026-03-02,expense,Qida,Həftəlik ərzaq,120.00,AZN
+2026-03-03,income,Freelance,Web dizayn layihəsi,450.00,USD
+2026-03-04,expense,Nəqliyyat,Metro kartı yüklənməsi,30.00,AZN
+2026-03-05,expense,Kommunal,Elektrik qəbzi,45.00,AZN
+2026-03-05,expense,Kommunal,Internet,35.00,AZN
+2026-03-06,expense,Əyləncə,Kino bileti,25.00,AZN
+2026-03-07,expense,Qida,Restoran,80.00,AZN
+2026-03-08,income,Freelance,Logo dizayn,200.00,USD
+2026-03-09,expense,Təhsil,Onlayn kurs,49.99,USD
+2026-03-10,expense,Sağlamlıq,Aptek,55.00,AZN
+2026-03-11,expense,Qida,Həftəlik ərzaq,135.00,AZN
+2026-03-12,expense,Geyim,Yay üçün geyim,180.00,AZN
+2026-03-13,income,Təqaüd,Dövlət təqaüdü,300.00,AZN
+2026-03-14,expense,Texnologiya,SSD alışı,95.00,AZN
+2026-03-15,expense,Nəqliyyat,Taksi,18.00,AZN

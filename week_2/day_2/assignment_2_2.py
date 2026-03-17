@@ -1,8 +1,3 @@
-"""
-Assignment 2.2 — Riyazi Emal Paketi (Math Processing Toolkit)
-Week 2, Day 2
-"""
-
 datasets = {
     "sensor_a": [23.5, 24.1, 22.8, 25.0, 23.9, 24.5, 22.1, 25.8, 23.2, 24.7,
                  26.1, 23.0, 24.3, 22.5, 25.5, 24.8, 23.7, 25.2, 22.9, 24.0],

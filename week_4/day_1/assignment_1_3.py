@@ -1,8 +1,3 @@
-"""
-Assignment 1.3 — Asinxron Chat Server Simulyatoru
-Week 4, Day 1
-"""
-
 users_config = [
     {"name": "Əli", "typing_speed": 1.5, "messages": [
         "Salam hamıya!", "Layihə necə gedir?", "Mən backend hissəni bitirdim",

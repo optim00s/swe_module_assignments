@@ -1,0 +1,17 @@
+{
+  "month": "2026-03",
+  "currency": "AZN",
+  "categories": {
+    "Kirayə": {"limit": 800, "priority": "essential"},
+    "Qida": {"limit": 500, "priority": "essential"},
+    "Nəqliyyat": {"limit": 100, "priority": "essential"},
+    "Kommunal": {"limit": 150, "priority": "essential"},
+    "Əyləncə": {"limit": 200, "priority": "optional"},
+    "Geyim": {"limit": 250, "priority": "optional"},
+    "Təhsil": {"limit": 150, "priority": "important"},
+    "Sağlamlıq": {"limit": 100, "priority": "important"},
+    "Texnologiya": {"limit": 200, "priority": "optional"},
+    "Digər": {"limit": 100, "priority": "optional"}
+  },
+  "savings_goal": 500
+}

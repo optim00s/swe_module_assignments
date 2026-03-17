@@ -1,8 +1,3 @@
-"""
-Assignment 3.3 — API Müqayisə və Monitoring Aləti
-Week 2, Day 3
-"""
-
 apis_to_test = {
     "NASA_APOD": {
         "url": "https://api.nasa.gov/planetary/apod",

@@ -1,0 +1,16 @@
+id,name,department,position,salary,hire_date,performance_score,city
+E001,Əli Həsənov,Mühəndislik,Senior Developer,4500,2020-03-15,92,Bakı
+E002,Leyla Məmmədova,Marketinq,Marketing Manager,3800,2019-07-22,88,Bakı
+E003,Tural Əliyev,Mühəndislik,Junior Developer,2200,2023-01-10,75,Gəncə
+E004,Nigar Hüseynova,HR,HR Specialist,2800,2021-05-18,81,Bakı
+E005,Rəşad Quliyev,Maliyyə,Accountant,3200,2018-11-03,90,Sumqayıt
+E006,Səbinə İsmayılova,Mühəndislik,DevOps Engineer,4000,2021-09-01,95,Bakı
+E007,Orxan Nəsirov,Marketinq,Content Writer,2000,2024-02-14,68,Gəncə
+E008,Günel Babayeva,Mühəndislik,Data Analyst,3500,2022-06-20,87,Bakı
+E009,Kamran Rzayev,Maliyyə,Finance Director,5500,2017-01-08,93,Bakı
+E010,Fidan Əsgərova,HR,HR Manager,4200,2019-04-11,85,Sumqayıt
+E011,Murad Sultanov,Mühəndislik,QA Engineer,3000,2022-08-15,79,Bakı
+E012,Aynur Kazımova,Marketinq,SEO Specialist,2500,2023-06-01,72,Lənkəran
+E013,Ceyhun Əhmədov,Mühəndislik,Team Lead,5000,2018-03-22,96,Bakı
+E014,Ülviyyə Nəzərova,Maliyyə,Financial Analyst,3400,2021-12-05,84,Bakı
+E015,Elşən Məlikzadə,IT Support,System Admin,3100,2020-10-30,77,Şəki

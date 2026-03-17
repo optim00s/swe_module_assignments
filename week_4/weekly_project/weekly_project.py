@@ -1,8 +1,3 @@
-"""
-Assignment weekly — Weekly Project
-Week 4, Day 3
-"""
-
 sources_config = {
     "hacker_news": {
         "type": "api",

@@ -1,8 +1,3 @@
-"""
-Assignment weekly — Weekly Project
-Week 1, Day 3
-"""
-
 books = [
     {"isbn": "978-1-001", "title": "Python Proqramlaşdırma", "author": "A. Məmmədov", "genre": "Texnologiya", "year": 2023, "copies": 5, "available": 5},
     {"isbn": "978-1-002", "title": "Data Elmi Əsasları", "author": "L. Əliyeva", "genre": "Texnologiya", "year": 2024, "copies": 3, "available": 3},

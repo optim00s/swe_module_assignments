@@ -1,8 +1,3 @@
-"""
-Assignment 2.3 — Sensor Şəbəkəsi Simulyatoru
-Week 3, Day 2
-"""
-
 sensor_configs = [
     {"id": "S-001", "type": "temperature", "location": "Otaq A", "battery": 85, "range": 50},
     {"id": "S-002", "type": "humidity", "location": "Otaq A", "battery": 62, "range": 50},

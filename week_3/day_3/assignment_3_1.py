@@ -1,8 +1,3 @@
-"""
-Assignment 3.1 — Paralel Fayl Emal Sistemi
-Week 3, Day 3
-"""
-
 import random, string
 def generate_test_files(directory, count=20):
     """Test faylları yarat: hər birində təsadüfi mətn, ədədlər, email ünvanları"""

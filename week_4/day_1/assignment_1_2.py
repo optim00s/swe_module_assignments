@@ -1,8 +1,3 @@
-"""
-Assignment 1.2 — Asinxron Tapşırıq Növbəsi (Task Queue)
-Week 4, Day 1
-"""
-
 task_batch = [
     {"type": "email", "priority": 2, "data": {"to": "eli@mail.az", "subject": "Hesabat", "body": "Aylıq hesabat hazırdır"}},
     {"type": "report", "priority": 1, "data": {"name": "Aylıq Satış", "format": "pdf", "period": "2026-03"}},

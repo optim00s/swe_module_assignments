@@ -1,8 +1,3 @@
-"""
-Assignment 2.1 — Mövcud Koda Test Yazmaq
-Week 5, Day 2
-"""
-
 # calculator.py
 from datetime import datetime, timedelta
 from typing import Union

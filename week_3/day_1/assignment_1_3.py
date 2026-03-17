@@ -1,8 +1,3 @@
-"""
-Assignment 1.3 — Bank Hesab Sistemi
-Week 3, Day 1
-"""
-
 customers_data = [
     {"id": "C-001", "name": "Əli Həsənov", "accounts": [
         {"number": "AZ01-0001", "type": "checking", "balance": 5200.00, "currency": "AZN"},

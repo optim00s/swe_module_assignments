@@ -1,0 +1,26 @@
+{
+  "projects": {
+    "PRJ-001": {
+      "name": "Veb Sayt Redizayn",
+      "deadline": "2026-04-15",
+      "tasks": [
+        {"id": "T-001", "title": "Wireframe hazırla", "priority": "high", "status": "done", "assignee": "Əli", "created": "2026-03-01", "tags": ["design", "ui"]},
+        {"id": "T-002", "title": "Rəng palitrasını seç", "priority": "medium", "status": "done", "assignee": "Leyla", "created": "2026-03-02", "tags": ["design"]},
+        {"id": "T-003", "title": "Responsive layout kodla", "priority": "high", "status": "in_progress", "assignee": "Tural", "created": "2026-03-05", "tags": ["frontend", "css"]},
+        {"id": "T-004", "title": "API endpoint-ləri yaz", "priority": "high", "status": "todo", "assignee": "Əli", "created": "2026-03-07", "tags": ["backend", "api"]},
+        {"id": "T-005", "title": "Unit testlər yaz", "priority": "medium", "status": "todo", "assignee": null, "created": "2026-03-08", "tags": ["testing"]}
+      ]
+    },
+    "PRJ-002": {
+      "name": "Mobil Tətbiq",
+      "deadline": "2026-05-01",
+      "tasks": [
+        {"id": "T-006", "title": "UI dizayn Figma-da", "priority": "high", "status": "in_progress", "assignee": "Leyla", "created": "2026-03-03", "tags": ["design", "mobile"]},
+        {"id": "T-007", "title": "Authentication modulu", "priority": "critical", "status": "todo", "assignee": "Əli", "created": "2026-03-06", "tags": ["backend", "security"]},
+        {"id": "T-008", "title": "Push notification sistemi", "priority": "low", "status": "todo", "assignee": null, "created": "2026-03-10", "tags": ["backend", "mobile"]},
+        {"id": "T-009", "title": "Beta test planı", "priority": "medium", "status": "todo", "assignee": "Nigar", "created": "2026-03-10", "tags": ["testing", "planning"]}
+      ]
+    }
+  },
+  "team": ["Əli", "Leyla", "Tural", "Nigar", "Rəşad"]
+}

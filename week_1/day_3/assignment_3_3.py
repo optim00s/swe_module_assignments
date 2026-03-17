@@ -1,8 +1,3 @@
-"""
-Assignment 3.3 — Data Pipeline (Comprehension + Generator ilə)
-Week 1, Day 3
-"""
-
 orders = [
     {"id": "ORD-1001", "customer": "Əli", "items": [("Laptop", 2500, 1), ("Siçan", 35, 2)], "city": "Bakı", "status": "delivered", "date": "2026-03-01"},
     {"id": "ORD-1002", "customer": "Leyla", "items": [("Telefon", 1800, 1), ("Qabıq", 25, 1)], "city": "Gəncə", "status": "delivered", "date": "2026-03-02"},

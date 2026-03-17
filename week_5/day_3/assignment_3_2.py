@@ -1,8 +1,3 @@
-"""
-Assignment 3.2 — Logging Framework Qurulması
-Week 5, Day 3
-"""
-
 test_scenarios = [
     {"level": "DEBUG", "msg": "Cache hit for key: user_123"},
     {"level": "INFO", "msg": "User login successful", "extra": {"user": "eli", "ip": "192.168.1.10"}},

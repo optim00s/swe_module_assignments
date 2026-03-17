@@ -1,8 +1,3 @@
-"""
-Assignment 2.1 — Distributor Emal Sistemi
-Week 4, Day 2
-"""
-
 io_tasks = [
     {"type": "api_call", "url": f"https://jsonplaceholder.typicode.com/posts/{i}"} for i in range(1, 11)
 ]

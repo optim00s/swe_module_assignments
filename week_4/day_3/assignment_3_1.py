@@ -1,8 +1,3 @@
-"""
-Assignment 3.1 — SQLite İnventar Sistemi
-Week 4, Day 3
-"""
-
 initial_products = [
     ("SKU001", "Mexanik Klaviatura", 89.99, 45, "Elektronika", "SUP-001"),
     ("SKU002", "Simsiz Siçan", 34.50, 120, "Elektronika", "SUP-001"),

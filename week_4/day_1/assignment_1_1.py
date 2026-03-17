@@ -1,8 +1,3 @@
-"""
-Assignment 1.1 — Asinxron Veb Scraper
-Week 4, Day 1
-"""
-
 urls_to_scrape = [
     {"name": "JSONPlaceholder Posts", "url": "https://jsonplaceholder.typicode.com/posts", "type": "api"},
     {"name": "JSONPlaceholder Users", "url": "https://jsonplaceholder.typicode.com/users", "type": "api"},

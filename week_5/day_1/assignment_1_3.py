@@ -1,8 +1,3 @@
-"""
-Assignment 1.3 — Kod Review Simulyatoru
-Week 5, Day 1
-"""
-
 import json, os, sys, time, random
 from datetime import datetime, timedelta
 

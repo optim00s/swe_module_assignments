@@ -1,8 +1,3 @@
-"""
-Assignment 1.2 — Server Monitoring Sistemi
-Week 3, Day 1
-"""
-
 servers_config = [
     {"id": "SRV-001", "name": "Web Server", "cpu_cores": 8, "ram_gb": 32, "storage_gb": 500, "role": "web"},
     {"id": "SRV-002", "name": "Database Server", "cpu_cores": 16, "ram_gb": 64, "storage_gb": 2000, "role": "database"},

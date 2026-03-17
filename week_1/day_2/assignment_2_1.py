@@ -1,8 +1,3 @@
-"""
-Assignment 2.1 — Tələbə Qiymətləndirmə Sistemi
-Week 1, Day 2
-"""
-
 students_data = [
     ("Əli Həsənov", "CS101", [85, 92, 78, 90, 88]),
     ("Leyla Məmmədova", "CS101", [95, 89, 92, 97, 91]),

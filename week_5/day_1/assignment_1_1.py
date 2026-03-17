@@ -1,8 +1,3 @@
-"""
-Assignment 1.1 — Kod Refaktorinqi: "Spaghetti"dən Təmiz Koda
-Week 5, Day 1
-"""
-
 def p(d,t):
  r=[]
  for i in d:

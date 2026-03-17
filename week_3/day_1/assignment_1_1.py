@@ -1,8 +1,3 @@
-"""
-Assignment 1.1 — Ticarət Simulyatoru
-Week 3, Day 1
-"""
-
 products_data = [
     ("Buğda", "Ərzaq", 0.85, 10000),
     ("Pambıq", "Xammal", 2.30, 5000),

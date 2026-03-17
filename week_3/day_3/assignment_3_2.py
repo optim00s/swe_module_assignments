@@ -1,8 +1,3 @@
-"""
-Assignment 3.2 — Real-time Məlumat Toplayıcısı
-Week 3, Day 3
-"""
-
 sources_config = [
     {"id": "stock", "name": "Birja Qiymətləri", "interval": 0.5, "data_gen": lambda: {"symbol": random.choice(["AAPL","GOOGL","MSFT"]), "price": round(random.uniform(100,500),2)}},
     {"id": "weather", "name": "Hava Məlumatı", "interval": 2.0, "data_gen": lambda: {"city": random.choice(["Bakı","Gəncə"]), "temp": round(random.uniform(5,35),1)}},
