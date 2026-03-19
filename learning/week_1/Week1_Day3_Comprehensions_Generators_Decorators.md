@@ -1,774 +1,796 @@
-# List Comprehensions, Generators, Decorators
+# Həftə 1 - Gün 3: List Comprehensions, Generators, Decorators
+
+`learning/week_1/Week1_Day3_Comprehensions_Generators_Decorators.md`
 
 ---
 
-## 1. List Comprehensions
+## 1. Comprehensions (Anlama İfadələri)
 
-### 1.1 Tərif
+### 1.1 Comprehension Nədir?
 
-List comprehension — mövcud bir ardıcıllıqdan (iterable) yeni list yaratmağın **qısa, oxunaqlı və Pythonic** üsuludur. Adi `for` dövrü ilə yaradılan list-lə eyni nəticəni verir, lakin daha az kodla.
+Comprehension — Python-a xas olan, **bir iterable üzərindən yeni kolleksiya yaratmaq** üçün kompakt və oxunaqlı sintaksis formalarıdır. Əsasən `for` dövrü + şərt + transformasiya əməliyyatını **tək sətirdə** ifadə etməyə imkan verir.
 
----
+Comprehension-ların üç əsas növü var:
+- **List comprehension** — `[ifadə for element in iterable if şərt]`
+- **Dict comprehension** — `{key: value for element in iterable if şərt}`
+- **Set comprehension** — `{ifadə for element in iterable if şərt}`
 
-### 1.2 Əsas Sintaksis
+Comprehension-lar yalnız qısaltma deyil — eyni zamanda adi `for` dövründən **daha sürətli** işləyir, çünki Python interpretatoru onları xüsusi bytecode ilə optimallaşdırır.
+
+### 1.2 List Comprehension
+
+#### Əsas Sintaksis
 
 ```
-[ifadə  for  element  in  ardıcıllıq]
+[ifadə for element in iterable]
+[ifadə for element in iterable if şərt]
 ```
+
+Bunu belə oxuyun: "iterable-dəki hər element üçün (əgər şərt doğrudursa) ifadəni hesabla və nəticəni yeni list-ə əlavə et."
+
+#### Ekvivalent `for` Dövrü ilə Müqayisə
 
 ```python
-# Adi for dövrü ilə:
-kvadratlar = []
-for i in range(1, 6):
-    kvadratlar.append(i ** 2)
-print(kvadratlar)   # [1, 4, 9, 16, 25]
+# === Məqsəd: 0-dan 9-a qədər ədədlərin kvadratlarını tapmaq ===
 
-# List comprehension ilə — EYNI nəticə:
-kvadratlar = [i ** 2 for i in range(1, 6)]
-print(kvadratlar)   # [1, 4, 9, 16, 25]
+# Ənənəvi for dövrü ilə
+squares_loop = []
+for x in range(10):
+    squares_loop.append(x ** 2)
+
+# List comprehension ilə — eyni nəticə, daha kompakt
+squares_comp = [x ** 2 for x in range(10)]
+
+# Hər ikisi eyni nəticəni verir:
+# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 ```
 
----
-
-### 1.3 Şərtli List Comprehension (`if`)
-
-**Filtrasiya** — yalnız şərti ödəyən elementləri götürmək:
-
-```
-[ifadə  for  element  in  ardıcıllıq  if  şərt]
-```
+#### Filtrasiya ilə List Comprehension
 
 ```python
-# Cüt ədədlər
-cütlər = [i for i in range(10) if i % 2 == 0]
-print(cütlər)   # [0, 2, 4, 6, 8]
+# Şərtli comprehension — yalnız şərtə uyğun elementlər daxil edilir
+raw_data = [12, -5, 0, 7.5, None, "", 42, -3, "noise", 99]
 
-# 5-dən böyük olanlar
-siyahı = [3, 7, 1, 9, 4, 6, 2, 8]
-böyüklər = [x for x in siyahı if x > 5]
-print(böyüklər)   # [7, 9, 6, 8]
+# Yalnız müsbət ədədləri seçmək
+# isinstance() ilə tip yoxlaması — yalnız int və float tipləri qəbul edilir
+positive_numbers = [
+    x for x in raw_data
+    if isinstance(x, (int, float))  # Əvvəlcə tipi yoxla
+    and x is not None               # None-u kənarlaşdır (None da isinstance keçə bilər)
+    and x > 0                       # Yalnız müsbət ədədlər
+]
+print(positive_numbers)  # [12, 7.5, 42, 99]
 
-# Yalnız string olanlar
-qarışıq = [1, "salam", 3.14, "dünya", True, "Python"]
-sözlər = [x for x in qarışıq if isinstance(x, str)]
-print(sözlər)   # ['salam', 'dünya', 'Python']
+# if-else ilə comprehension — transformasiya + şərt
+# DİQQƏT: if-else ifadənin ÖNÜNdə, filter isə ARXASINda yazılır
+scores = [85, 42, 91, 67, 73, 55, 98]
+results = [
+    "pass" if score >= 70 else "fail"   # if-else — transformasiya hissəsi (ifadənin özü)
+    for score in scores                  # iterasiya
+]
+# ['pass', 'fail', 'pass', 'fail', 'pass', 'fail', 'pass']
 ```
 
----
+> [!tip] **Best Practice — Comprehension-da if vs if-else Mövqeyi**
+> Bu, tez-tez qarışdırılan bir xüsusiyyətdir:
+> - **Filtrasiya** (`if` alone): `for`-dan **sonra** yazılır → `[x for x in data if x > 0]`
+> - **Transformasiya** (`if-else`): `for`-dan **əvvəl** yazılır → `["yes" if x > 0 else "no" for x in data]`
+>
+> Məntiqi: filtrasiya "hansı elementləri götürəcəyimizi" seçir, transformasiya isə "elementlə nə edəcəyimizi" müəyyən edir.
 
-### 1.4 `if-else` ilə List Comprehension (Ternary)
-
-Hər elementə **transformasiya** tətbiq etmək — `if-else` ifadənin **əvvəlindədir**:
-
-```
-[doğru_dəyər  if  şərt  else  yanlış_dəyər  for  element  in  ardıcıllıq]
-```
+#### İç-içə (Nested) Comprehension
 
 ```python
-# Müsbət isə özü, mənfi isə 0
-ədədlər = [-2, 5, -1, 8, -4, 3]
-nəticə = [x if x > 0 else 0 for x in ədədlər]
-print(nəticə)   # [0, 5, 0, 8, 0, 3]
+# 2D matris yaratmaq (3x4 matris)
+matrix = [
+    [row * 4 + col for col in range(4)]   # Daxili list — hər sətir
+    for row in range(3)                     # Xarici list — sətirlərin siyahısı
+]
+# [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
 
-# Cüt isə "cüt", tək isə "tək"
-etiket = ["cüt" if x % 2 == 0 else "tək" for x in range(6)]
-print(etiket)   # ['cüt', 'tək', 'cüt', 'tək', 'cüt', 'tək']
+# Matrisi düzləşdirmək (flatten) — 2D → 1D
+flat = [
+    element
+    for row in matrix         # Əvvəl xarici dövr — hər sətir üçün
+    for element in row        # Sonra daxili dövr — sətirdəki hər element üçün
+]
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+# Dekart hasili (Cartesian product) — bütün kombinasiyalar
+models = ["BERT", "GPT"]
+sizes = ["base", "large"]
+combinations = [
+    f"{model}-{size}"
+    for model in models
+    for size in sizes
+]
+# ['BERT-base', 'BERT-large', 'GPT-base', 'GPT-large']
 ```
 
-> ⚠️ **Fərq:**
-> - `[x for x in s if şərt]` → **filtrasiya** (bəzi elementlər atılır)
-> - `[x if şərt else y for x in s]` → **transformasiya** (bütün elementlər qalır, dəyişdirilir)
+> [!warning] **Diqqət — Comprehension Oxunaqlılığı**
+> İç-içə comprehension-lar 2 səviyyədən çox olmamalıdır. Əgər comprehension tək sətirdə rahat oxunmursa, adi `for` dövrünə çevirin. **Qısa kod ≠ yaxşı kod** — oxunaqlılıq həmişə qısalıqdan önəmlidir.
 
----
-
-### 1.5 İç-içə List Comprehension (Nested)
+### 1.3 Dictionary Comprehension
 
 ```python
-# İç-içə for dövrü → düzləşdirmə (flatten)
-matris = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-düz = [element for sətir in matris for element in sətir]
-print(düz)   # [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# Sadə dict comprehension
+words = ["transformer", "attention", "embedding", "tokenizer"]
+word_lengths = {word: len(word) for word in words}
+# {'transformer': 11, 'attention': 9, 'embedding': 9, 'tokenizer': 9}
 
-# 3x3 matris yaratmaq
-matris = [[i * j for j in range(1, 4)] for i in range(1, 4)]
-print(matris)
-# [[1,2,3], [2,4,6], [3,6,9]]
+# Mövcud dict-i filtrasiya etmək
+model_scores = {
+    "GPT-4": 92.5,
+    "GPT-3.5": 81.2,
+    "BERT": 76.8,
+    "Claude": 91.0,
+    "T5": 68.4,
+}
+
+# Yalnız 80+ bal alan modelləri saxlamaq
+top_models = {
+    name: score
+    for name, score in model_scores.items()
+    if score >= 80
+}
+# {'GPT-4': 92.5, 'GPT-3.5': 81.2, 'Claude': 91.0}
+
+# Key və value-nu dəyişmək (inversion)
+inverted = {score: name for name, score in model_scores.items()}
+# {92.5: 'GPT-4', 81.2: 'GPT-3.5', 76.8: 'BERT', 91.0: 'Claude', 68.4: 'T5'}
+
+# Enumerate ilə indeks əsaslı dict
+features = ["price", "area", "rooms", "floor"]
+feature_index = {feature: idx for idx, feature in enumerate(features)}
+# {'price': 0, 'area': 1, 'rooms': 2, 'floor': 3}
 ```
 
----
-
-### 1.6 Dict, Set və Tuple Comprehension
-
-Eyni sintaksis digər strukturlar üçün də işlədilir:
+### 1.4 Set Comprehension
 
 ```python
-# Dict comprehension
-kvadratlar = {x: x**2 for x in range(1, 6)}
-print(kvadratlar)   # {1:1, 2:4, 3:9, 4:16, 5:25}
+# Set comprehension — dublikatlar avtomatik silinir
+text = "machine learning is a subset of artificial intelligence"
+unique_lengths = {len(word) for word in text.split()}
+# {1, 2, 7, 8, 12} — sözlərin unikal uzunluqları (sırasız)
 
-# Şərtli dict comprehension
-cüt_kvadratlar = {x: x**2 for x in range(10) if x % 2 == 0}
-print(cüt_kvadratlar)   # {0:0, 2:4, 4:16, 6:36, 8:64}
-
-# Set comprehension
-unikal_uzunluqlar = {len(söz) for söz in ["alma", "armud", "kivi", "gilas"]}
-print(unikal_uzunluqlar)   # {4, 5} — sırasız, unikal
-
-# Generator expression (tuple deyil!)
-gen = (x**2 for x in range(5))
-print(type(gen))   # <class 'generator'>
+# Data cleaning — unikal, normallaşdırılmış dəyərlər
+raw_tags = ["Python", "python", "PYTHON", "Java", "java", "JAVA", "Rust"]
+clean_tags = {tag.lower() for tag in raw_tags}
+# {'python', 'java', 'rust'}
 ```
 
-> 💡 `(x for x in ...)` — bu **tuple** deyil, **generator expression**-dır. Tuple üçün: `tuple(x for x in ...)`
-
----
-
-### 1.7 List Comprehension vs `map()`/`filter()`
+### 1.5 Comprehension Performance Müqayisəsi
 
 ```python
-ədədlər = [1, 2, 3, 4, 5]
+import timeit
 
-# map() — funksiya tətbiq et
-map_nəticəsi    = list(map(lambda x: x**2, ədədlər))
-# List comprehension ilə ekvivalent:
-lc_nəticəsi     = [x**2 for x in ədədlər]
+# 1 milyonluq list yaratmaq — müxtəlif üsullar
+n = 1_000_000
 
-# filter() — filtrasiya et
-filter_nəticəsi = list(filter(lambda x: x % 2 == 0, ədədlər))
-# List comprehension ilə ekvivalent:
-lc_filtr        = [x for x in ədədlər if x % 2 == 0]
+# for dövrü + append
+def with_loop():
+    result = []
+    for i in range(n):
+        result.append(i ** 2)
+    return result
+
+# List comprehension
+def with_comprehension():
+    return [i ** 2 for i in range(n)]
+
+# map() funksiyası
+def with_map():
+    return list(map(lambda i: i ** 2, range(n)))
+
+# Nəticələr (təxmini):
+# for loop:        ~0.12 saniyə
+# comprehension:   ~0.08 saniyə (~33% daha sürətli)
+# map():           ~0.10 saniyə
 ```
-
-Üstünlük: List comprehension adətən daha oxunaqlıdır.
-
----
-
-### 1.8 Nə Zaman İstifadə Etməli, Nə Zaman Etməməli?
-
-```python
-# ✅ Uyğun — sadə, bir sətirdə oxunaqlı
-[x**2 for x in range(10) if x % 2 == 0]
-
-# ❌ Uyğun deyil — çox mürəkkəb, ayrı funksiya yaz
-[f(x) for x in data if g(x) and h(x) or k(x) if len(x) > 3]
-```
-
-**Qayda:** Bir sətirdə rahat oxunmursa — adi `for` dövrü daha aydındır.
 
 ---
 
 ## 2. Generators (Generatorlar)
 
-### 2.1 Tərif — "Tənbəl" Hesablama
+### 2.1 Generator Nədir?
 
-Generator — elementləri **hamısını birdən yaddaşda saxlamayan**, onları yalnız **tələb olunduqda** (lazım olan anda) hesablayan xüsusi bir iterable-dır.
+Generator — dəyərləri **hamısını bir anda yaddaşda saxlamaq əvəzinə**, **lazım olduqda tək-tək yaradıb qaytaran** xüsusi iterator növüdür. Bu konsept **lazy evaluation** (tənbəl qiymətləndirmə) adlanır.
 
-**Adi list vs generator:**
+Bu fərqi başa düşmək üçün bir analoji düşünün: list — bütün yeməklərin eyni anda masaya qoyulduğu bufet; generator isə hər yemək tələb olunduqda hazırlanan restoran menyusu. Bufet çox yer tutur (yaddaş), restoran isə yalnız sifariş verildikdə hazırlayır (lazy evaluation).
 
-```python
-import sys
+**List vs Generator — Yaddaş Fərqi:**
 
-# List — hamısını yaddaşda saxlayır
-adi_list = [x**2 for x in range(1_000_000)]
-print(sys.getsizeof(adi_list))    # ~8 MB!
-
-# Generator — yalnız bir element saxlayır
-gen = (x**2 for x in range(1_000_000))
-print(sys.getsizeof(gen))         # ~120 bytes
-```
-
----
+| Xüsusiyyət | List | Generator |
+|---|---|---|
+| **Yaddaş** | Bütün elementlər eyni anda yaddaşda | Yalnız cari element yaddaşda |
+| **1M element yaddaşı** | ~8 MB (int list) | ~120 bytes (generator obyekti) |
+| **Sürət (ilk element)** | Bütün list yaradılana qədər gözləyir | Dərhal ilk elementi qaytarır |
+| **Təkrar istifadə** | İstənilən qədər iterate oluna bilər | Yalnız bir dəfə iterate oluna bilər |
+| **İndekslə müraciət** | ✅ `list[5]` | ❌ Mümkün deyil |
 
 ### 2.2 `yield` Açar Sözü
 
-`yield` — funksiyanı **generator funksiyasına** çevirir. `return`-dən fərqi:
-- `return` funksiyanı bitirər, dəyər qaytarır
-- `yield` funksiyanı **dayandırır**, dəyər verir, sonra **davam etdirilə bilər**
+`yield` — funksiyanı generatora çevirən açar sözdür. `return` kimi dəyər qaytarır, lakin funksiyanın icrasını **dayandırır** (pause) və sonrakı çağırışda **davam etdirir** (resume).
+
+Bu davranış funksiya kontekstinin "dondurulması" və "açılması" kimi düşünülə bilər — funksiyanın lokal dəyişənləri, icra nöqtəsi və stack frame-i qorunur.
 
 ```python
-def sayac():
-    print("Birinci yield-dən əvvəl")
-    yield 1
-    print("İkinci yield-dən əvvəl")
-    yield 2
-    print("Üçüncü yield-dən əvvəl")
-    yield 3
-    print("Funksiya bitdi")
+# Sadə generator funksiyası
+def countdown(n):
+    """n-dən 1-ə qədər geri sayma generatoru."""
+    print(f"Generator başladı: {n}-dən geri sayma")
+    while n > 0:
+        yield n          # Dəyəri qaytarır və burada DAYANIR
+        n -= 1           # Növbəti next() çağırışında BURADAN davam edir
+    print("Generator tamamlandı!")
 
-gen = sayac()           # Funksiya ÇALIŞMIR — sadəcə generator yaradılır
-print(type(gen))        # <class 'generator'>
+# Generator obyektini yaratmaq — funksiya hələ İCRA OLUNMUR
+gen = countdown(5)
+print(type(gen))  # <class 'generator'>
 
-print(next(gen))        # "Birinci yield-dən əvvəl" → 1
-print(next(gen))        # "İkinci yield-dən əvvəl"  → 2
-print(next(gen))        # "Üçüncü yield-dən əvvəl" → 3
-print(next(gen))        # "Funksiya bitdi" → StopIteration xətası
+# next() ilə dəyərləri tək-tək almaq
+print(next(gen))  # "Generator başladı: 5-dən geri sayma" və 5 qaytarır
+print(next(gen))  # 4
+print(next(gen))  # 3
+
+# for dövrü qalan dəyərləri avtomatik alır
+for value in gen:
+    print(value)
+# 2
+# 1
+# "Generator tamamlandı!"
+
+# Generator tükəndikdən sonra next() çağırmaq StopIteration verir
+# next(gen)  # StopIteration exception
 ```
-
----
-
-### 2.3 Generator Funksiyaları Yaratmaq
-
-#### Nümunə 1: Sonsuz ardıcıllıq
 
 ```python
-def sonsuz_sayac(başlanğıc=0):
-    n = başlanğıc
-    while True:           # Sonsuz dövr — amma yaddaş problemi yoxdur!
-        yield n
-        n += 1
+# Praktik nümunə: Böyük fayl oxuma generatoru
+def read_large_file(file_path, chunk_size=1024):
+    """
+    Böyük faylı chunk-larla (hissə-hissə) oxuyan generator.
 
-gen = sonsuz_sayac(10)
-print(next(gen))   # 10
-print(next(gen))   # 11
-print(next(gen))   # 12
+    Faylı tamamilə yaddaşa yükləmək əvəzinə, chunk_size bayt hissələrlə
+    oxuyur. 10GB fayl üçün belə yalnız chunk_size qədər yaddaş istifadə edir.
+    """
+    with open(file_path, 'r') as file:
+        while True:
+            chunk = file.read(chunk_size)
+            if not chunk:
+                break       # Fayl sona çatdı
+            yield chunk     # Chunk-u qaytarır, sonrakı istəyə qədər gözləyir
 
-# for dövrü ilə (break lazımdır, əks halda sonsuz çalışar)
-for n in sonsuz_sayac():
-    if n > 5:
-        break
-    print(n)
-# 0 1 2 3 4 5
+# İstifadə:
+# for chunk in read_large_file("training_data.csv"):
+#     process(chunk)   # Hər chunk ayrıca emal olunur
 ```
 
-#### Nümunə 2: Böyük fayl oxuma
+### 2.3 Generator Expressions (Generator İfadələri)
+
+Generator expression — list comprehension-ın lazy versiyasıdır. Kvadrat mötərizə `[]` əvəzinə adi mötərizə `()` istifadə olunur.
 
 ```python
-def fayl_oxu(fayl_adı):
-    with open(fayl_adı) as f:
-        for sətir in f:
-            yield sətir.strip()   # Hər dəfə bir sətir — yaddaşda tam fayl saxlanmır
+# List comprehension — bütün nəticələri dərhal yaddaşda yaradır
+squares_list = [x ** 2 for x in range(1_000_000)]
+# ~8MB yaddaş istifadə edir
 
-for sətir in fayl_oxu("böyük_fayl.txt"):
-    print(sətir)
+# Generator expression — dəyərləri lazım olduqda yaradır
+squares_gen = (x ** 2 for x in range(1_000_000))
+# ~120 bytes yaddaş istifadə edir!
+
+# Generator expression-ı funksiyalara birbaşa ötürmək
+# (Əlavə mötərizə lazım deyil — funksiya mötərizəsi kifayətdir)
+total = sum(x ** 2 for x in range(1_000_000))
+max_square = max(x ** 2 for x in range(100))
+has_negative = any(x < 0 for x in [1, -2, 3])  # True
+
+# Yaddaş müqayisəsi
+import sys
+list_size = sys.getsizeof([x ** 2 for x in range(10000)])
+gen_size = sys.getsizeof(x ** 2 for x in range(10000))
+print(f"List: {list_size:,} bytes")   # ~87,624 bytes
+print(f"Generator: {gen_size:,} bytes")  # ~200 bytes
 ```
 
-#### Nümunə 3: Pipeline (Zəncir)
+> [!tip] **Best Practice — Nə Vaxt Generator, Nə Vaxt List?**
+> - **Generator istifadə edin** əgər: data çox böyükdür, yalnız bir dəfə iterate edəcəksiniz, bütün nəticələrə eyni anda ehtiyac yoxdur, pipeline processing edirsiniz.
+> - **List istifadə edin** əgər: elementlərə indekslə müraciət lazımdır, `len()` lazımdır, birdən çox dəfə iterate etmək lazımdır, data kiçikdir.
+> - **Qızıl qayda**: `sum()`, `max()`, `min()`, `any()`, `all()` kimi funksiyalara ötürərkən HƏMİŞƏ generator expression istifadə edin — list yaratmağa ehtiyac yoxdur.
+
+### 2.4 Generator Pipeline (Boru Xətti)
+
+Generator-ların ən güclü istifadə hallarından biri — bir neçə generatoru zəncirvari bağlayaraq **data processing pipeline** yaratmaqdır. Hər generator yalnız özünə lazım olan minimum yaddaşı istifadə edir.
 
 ```python
-def oxu(data):
-    for element in data:
-        yield element
+def read_sensor_data(filepath):
+    """Sensor datasını sətir-sətir oxuyur (mərhələ 1)."""
+    with open(filepath) as f:
+        for line in f:
+            yield line.strip()
 
-def filtr(data, şərt):
-    for element in data:
-        if şərt(element):
-            yield element
+def parse_readings(lines):
+    """Hər sətiri float-a çevirir, xətalıları atlayır (mərhələ 2)."""
+    for line in lines:
+        try:
+            yield float(line)
+        except ValueError:
+            continue    # Etibarsız sətirləri atlayır
 
-def çevir(data, f):
-    for element in data:
-        yield f(element)
+def filter_anomalies(readings, threshold=100.0):
+    """Anomaliyaları (həddi aşan dəyərləri) süzür (mərhələ 3)."""
+    for reading in readings:
+        if reading <= threshold:
+            yield reading
 
-# Zəncir: oxu → filtr → çevir (hamısı lazy!)
-siyahı = range(1, 20)
-nəticə = çevir(
-    filtr(oxu(siyahı), lambda x: x % 2 == 0),
-    lambda x: x ** 2
-)
+def compute_moving_average(readings, window=5):
+    """Hərəkətli ortalama hesablayır (mərhələ 4)."""
+    buffer = []
+    for reading in readings:
+        buffer.append(reading)
+        if len(buffer) > window:
+            buffer.pop(0)
+        yield sum(buffer) / len(buffer)
 
-for x in nəticə:
-    print(x)   # 4, 16, 36, 64, 100, 144, 196, 256, 324
+# Pipeline qurulması — hər generator əvvəlkindən data alır
+# Heç bir mərhələdə bütün data yaddaşa yüklənmir!
+# raw_lines = read_sensor_data("sensors.txt")     # Lazy — heç nə oxumur hələ
+# parsed = parse_readings(raw_lines)               # Lazy — gözləyir
+# clean = filter_anomalies(parsed)                 # Lazy — gözləyir
+# averages = compute_moving_average(clean)          # Lazy — gözləyir
+#
+# for avg in averages:                             # İndi hamısı işə düşür!
+#     print(f"Moving avg: {avg:.2f}")
 ```
 
----
+### 2.5 `yield from` — Delegasiya
 
-### 2.4 `yield from` — Generator Delegasiyası
+`yield from` — bir generatorun başqa bir iterable-ın və ya generatorun bütün elementlərini öz adından qaytarmasına imkan verir. Bu, iç-içə generator-ları sadələşdirir.
 
 ```python
-def generator_a():
-    yield 1
-    yield 2
+# yield from olmadan — əl ilə iterasiya
+def flatten_manual(nested_list):
+    for sublist in nested_list:
+        for item in sublist:
+            yield item
 
-def generator_b():
-    yield 3
-    yield 4
+# yield from ilə — daha təmiz
+def flatten(nested_list):
+    for sublist in nested_list:
+        yield from sublist    # sublist-in bütün elementlərini qaytarır
 
-def birləşdirilmiş():
-    yield from generator_a()   # a-nın hər elementini yield et
-    yield from generator_b()   # b-nin hər elementini yield et
-    yield from [5, 6, 7]       # iterable-dan yield et
+data = [[1, 2, 3], [4, 5], [6, 7, 8, 9]]
+print(list(flatten(data)))   # [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-print(list(birləşdirilmiş()))   # [1, 2, 3, 4, 5, 6, 7]
+# Rekursiv flatten — istənilən dərinlikdəki nested strukturu düzləşdirir
+def deep_flatten(iterable):
+    for item in iterable:
+        if isinstance(item, (list, tuple)):
+            yield from deep_flatten(item)   # Rekursiv çağırış
+        else:
+            yield item
+
+deeply_nested = [1, [2, [3, [4, [5]]]], 6]
+print(list(deep_flatten(deeply_nested)))  # [1, 2, 3, 4, 5, 6]
 ```
 
----
+### 2.6 Iterators vs Generators Müqayisəsi
 
-### 2.5 Generator Metodları
+| Xüsusiyyət | Iterator (Manual) | Generator |
+|---|---|---|
+| **Yaratma** | Class ilə (`__iter__`, `__next__`) | `yield` ilə (funksiya) və ya generator expression |
+| **Kod uzunluğu** | Çox (class boilerplate) | Az (funksiya + yield) |
+| **State management** | Əl ilə (instance dəyişənləri) | Avtomatik (Python saxlayır) |
+| **StopIteration** | Əl ilə `raise` etmək lazım | Avtomatik (`return` və ya funksiya sonu) |
+| **İstifadə halı** | Kompleks iterasiya məntiqi | Sadə ardıcıllıq generasiyası |
 
 ```python
-def gen_func():
-    dəyər = yield 1
-    print(f"Daxil olan dəyər: {dəyər}")
-    yield 2
+# Manual iterator — çox kod lazımdır
+class CountDown:
+    def __init__(self, start):
+        self.current = start
 
-gen = gen_func()
+    def __iter__(self):
+        return self
 
-# .send() — generatora dəyər göndər
-print(next(gen))       # 1 — ilk next() ilə başla
-print(gen.send(42))    # "Daxil olan dəyər: 42" → 2
+    def __next__(self):
+        if self.current <= 0:
+            raise StopIteration
+        value = self.current
+        self.current -= 1
+        return value
 
-# .throw() — generatora xəta göndər
-# .close() — generatoru bağla
+# Eyni funksionallıq generator ilə — cəmi 4 sətir
+def countdown(start):
+    while start > 0:
+        yield start
+        start -= 1
 ```
-
----
-
-### 2.6 `next()` və `for` ilə İstifadə
-
-```python
-def üçlər():
-    yield 3
-    yield 6
-    yield 9
-
-gen = üçlər()
-
-# next() ilə manual
-print(next(gen))   # 3
-print(next(gen))   # 6
-
-# for dövrü ilə (StopIteration-ı avtomatik tutur)
-gen2 = üçlər()
-for x in gen2:
-    print(x)   # 3 6 9
-
-# Default dəyər ilə next()
-gen3 = üçlər()
-print(next(gen3, "Bitti"))   # 3
-print(next(gen3, "Bitti"))   # 6
-print(next(gen3, "Bitti"))   # 9
-print(next(gen3, "Bitti"))   # "Bitti" — StopIteration əvəzinə
-```
-
----
-
-### 2.7 Generator-un Əsas Xüsusiyyətləri
-
-```python
-gen = (x for x in range(5))
-
-# ⚠️ Generator bir dəfəlik istifadə olunur!
-print(list(gen))    # [0, 1, 2, 3, 4]
-print(list(gen))    # [] — tükənib, yenidən başlamır!
-
-# Yenidən istifadə üçün generator funksiyasını yenidən çağır:
-def yenilənə_bilən():
-    yield from range(5)
-
-print(list(yenilənə_bilən()))   # [0, 1, 2, 3, 4]
-print(list(yenilənə_bilən()))   # [0, 1, 2, 3, 4] — hər dəfə təzə
-```
-
----
-
-### 2.8 List vs Generator — Nə Zaman Hansını?
-
-| Vəziyyət | Seç |
-|---|---|
-| Elementlər dəfələrlə lazımdır | `list` |
-| İndeksləmə, slicing lazımdır | `list` |
-| `len()` lazımdır | `list` |
-| Çox böyük və ya sonsuz ardıcıllıq | `generator` |
-| Yalnız bir dəfə keçiləcək | `generator` |
-| Yaddaş optimallaşdırması kritikdir | `generator` |
-| Pipeline (bir-birinin ardınca işlem) | `generator` |
 
 ---
 
 ## 3. Decorators (Dekoratorlar)
 
-### 3.1 Tərif — "Funksiya Sarğısı"
+### 3.1 Əvvəlki Konseptlər: First-Class Functions
 
-Decorator — **başqa bir funksiyaya əlavə davranış qatan**, **həmin funksiyanı dəyişdirmədən** onu genişləndirən bir funksiya növüdür. Öz işləmə mexanizmi anlamaq üçün əvvəlcə Python-da funksiyaların "birinci dərəcəli vətəndaş" (first-class citizen) olduğunu bilmək lazımdır.
+Dekoratorları başa düşmək üçün əvvəlcə Python-da funksiyaların **birinci sinif vətəndaş** (first-class citizen) olduğunu bilmək lazımdır. Bu o deməkdir ki, funksiyalar:
 
----
-
-### 3.2 Funksiyalar First-Class Citizen-dır
-
-Python-da funksiyalar dəyər kimi işlənir — dəyişənlərə mənimsədilə, arqument kimi ötürülə, başqa funksiyadan qaytarıla bilər.
+1. **Dəyişənə təyin edilə bilər** — digər dəyərlər kimi
+2. **Başqa funksiyaya parametr olaraq ötürülə bilər** — callback kimi
+3. **Başqa funksiyadan qaytarıla bilər** — factory pattern
+4. **Data strukturlarında saxlanıla bilər** — list, dict elementləri kimi
 
 ```python
-# 1. Funksiya dəyişənə mənimsədilə bilər
-def salam():
-    return "Salam!"
+# 1. Funksiya dəyişənə təyin oluna bilər
+def greet(name):
+    return f"Salam, {name}!"
 
-f = salam           # Funksiya çağırılmır — sadəcə istinad kopyalanır
-print(f())          # "Salam!" — f, salam-ın istinadıdır
+say_hello = greet              # Funksiya obyektini dəyişənə təyin edirik (çağırmırıq!)
+print(say_hello("Arrakis"))   # "Salam, Arrakis!" — eyni funksiya, fərqli ad
 
-# 2. Funksiya arqument kimi ötürülə bilər
-def tətbiq_et(funksiya, dəyər):
-    return funksiya(dəyər)
+# 2. Funksiya başqa funksiyaya parametr olaraq ötürülə bilər
+def apply_operation(func, value):
+    """Verilmiş funksiyanı verilmiş dəyərə tətbiq edir."""
+    return func(value)
 
-print(tətbiq_et(len, "Python"))   # 6
-print(tətbiq_et(str.upper, "salam"))   # "SALAM"
+result = apply_operation(len, "Transformer")   # len funksiyasını ötürürük
+print(result)  # 11
 
 # 3. Funksiya başqa funksiyadan qaytarıla bilər
-def xarici():
-    def daxili():
-        return "Mən daxili funksiyayam"
-    return daxili   # Funksiya qaytarılır, çağırılmır
+def create_multiplier(factor):
+    """Verilmiş əmsala görə vurma funksiyası yaradıb qaytarır."""
+    def multiplier(x):
+        return x * factor   # 'factor' enclosing scope-dan gəlir (closure)
+    return multiplier        # Funksiyanı çağırmadan qaytarırıq
 
-f = xarici()
-print(f())   # "Mən daxili funksiyayam"
+double = create_multiplier(2)
+triple = create_multiplier(3)
+print(double(5))    # 10
+print(triple(5))    # 15
 ```
 
----
+### 3.2 Closures (Bağlama)
 
-### 3.3 Closure (Qapalı Ətraf)
-
-Decorator-u anlamaq üçün closure anlayışı vacibdir.
-
-**Closure** — daxili funksiyanın, xarici funksiyanın dəyişənlərini "yadda saxlaması"dır — xarici funksiya bitdikdən sonra belə.
+Closure — **xarici funksiyası artıq icrasını bitirdikdən sonra da** xarici funksiyanın dəyişənlərinə müraciət edə bilən iç-içə (nested) funksiyadır. Dekoratorların texniki əsasını closures təşkil edir.
 
 ```python
-def əmsal_yaradan(əmsal):
-    def vurucu(x):
-        return x * əmsal   # 'əmsal' xarici funksiyadan götürülür
-    return vurucu
+def create_counter(start=0):
+    """
+    Hər çağırışda artan sayğac funksiyası yaradır.
+    'count' dəyişəni closure vasitəsilə "yadda saxlanılır".
+    """
+    count = start     # Bu dəyişən closure-da "tutulacaq"
 
-ikiqat = əmsal_yaradan(2)   # əmsal=2 olan closure
-üçqat  = əmsal_yaradan(3)   # əmsal=3 olan closure
+    def increment():
+        nonlocal count    # Enclosing scope-dakı 'count'-u dəyişdirmək üçün
+        count += 1
+        return count
 
-print(ikiqat(5))    # 10
-print(üçqat(5))     # 15
-print(ikiqat(7))    # 14
+    return increment     # increment funksiyası count-a istinadını saxlayır
 
-# Closure-un yadda saxladığı dəyəri görmək:
-print(ikiqat.__closure__[0].cell_contents)   # 2
+# create_counter() artıq icrasını bitirib, amma...
+counter_a = create_counter(0)
+counter_b = create_counter(100)
+
+print(counter_a())  # 1  — hər çağırış count-u artırır
+print(counter_a())  # 2
+print(counter_a())  # 3
+print(counter_b())  # 101 — müstəqil closure, öz count-u var
+print(counter_b())  # 102
 ```
 
----
+### 3.3 Decorator Nədir?
 
-### 3.4 Decorator — Əl ilə Yazılışı
+Decorator — **başqa bir funksiyanı alıb, onun davranışını dəyişdirən/genişləndirən** və yeni funksiyanı qaytaran funksiya/callable-dır. Orijinal funksiyanın kodunu dəyişdirmədən ona əlavə funksionallıq "sarımaq" (wrap) üçün istifadə olunur.
 
-```python
-def dekorator(funksiya):
-    def sarğı(*args, **kwargs):
-        print("Funksiyadan ƏVVƏL")
-        nəticə = funksiya(*args, **kwargs)   # orijinal funksiyanı çağır
-        print("Funksiyadan SONRA")
-        return nəticə
-    return sarğı
+Bu, **Open/Closed Principle**-in (açıq-qapalı prinsip) praktik tətbiqidir: kod genişləndirməyə açıq, dəyişikliyə qapalı olmalıdır.
 
-def salamla(ad):
-    print(f"Salam, {ad}!")
+**Decorator-un iş prinsipi:**
 
-# Decorator-u əl ilə tətbiq etmək:
-salamla = dekorator(salamla)
-
-salamla("Leyla")
-# Funksiyadan ƏVVƏL
-# Salam, Leyla!
-# Funksiyadan SONRA
+```
+@decorator          my_func = decorator(my_func)
+def my_func():  →   # Bu iki yazılış tamamilə ekvivalentdir
+    ...
 ```
 
----
-
-### 3.5 `@` Sintaksisi — Şəkər Sintaksis (Syntactic Sugar)
-
-`@dekorator` yazmaq — `funksiya = dekorator(funksiya)` yazmaqla **tamamilə eynidir**:
-
-```python
-def dekorator(funksiya):
-    def sarğı(*args, **kwargs):
-        print("Əvvəl")
-        nəticə = funksiya(*args, **kwargs)
-        print("Sonra")
-        return nəticə
-    return sarğı
-
-@dekorator   # ← Bu sətir: salamla = dekorator(salamla) ilə eynidir
-def salamla(ad):
-    print(f"Salam, {ad}!")
-
-salamla("Murad")
-# Əvvəl
-# Salam, Murad!
-# Sonra
-```
-
----
-
-### 3.6 Praktiki Nümunələr
-
-#### Zamanlama Dekoratoru
+### 3.4 Sadə Decorator Yaratmaq
 
 ```python
 import time
+import functools
 
-def zamanlayıcı(funksiya):
-    def sarğı(*args, **kwargs):
-        başlanğıc = time.time()
-        nəticə = funksiya(*args, **kwargs)
-        son = time.time()
-        print(f"{funksiya.__name__} {son - başlanğıc:.4f} saniyəyə çalışdı")
-        return nəticə
-    return sarğı
+def timer(func):
+    """
+    Funksiyanın icra müddətini ölçən decorator.
 
-@zamanlayıcı
-def yavaş_funksiya():
-    time.sleep(1)
-    return "Bitdi"
+    Bu decorator:
+    1. Orijinal funksiyanı parametr olaraq alır
+    2. Wrapper funksiya yaradır — orijinal funksiyanı əhatə edir
+    3. Wrapper-i qaytarır — orijinal funksiyanın yerinə keçir
+    """
+    @functools.wraps(func)   # Orijinal funksiyanın __name__, __doc__ və s. atributlarını qoruyur
+    def wrapper(*args, **kwargs):
+        # ÖNCƏKİ davranış — funksiyanın icrasından əvvəl
+        start_time = time.perf_counter()
 
-yavaş_funksiya()
-# yavaş_funksiya 1.0012 saniyəyə çalışdı
+        # Orijinal funksiyanı çağırmaq
+        result = func(*args, **kwargs)
+
+        # SONRAKİ davranış — funksiyanın icrasından sonra
+        elapsed = time.perf_counter() - start_time
+        print(f"⏱ {func.__name__}() {elapsed:.4f} saniyədə tamamlandı")
+
+        return result    # Orijinal funksiyanın nəticəsini qaytarır
+
+    return wrapper       # Wrapper funksiyasını qaytarır
+
+# Decorator-u tətbiq etmək — @ sintaksisi ilə
+@timer
+def train_model(epochs):
+    """Model treninqi simulyasiyası."""
+    total = 0
+    for i in range(epochs * 100000):
+        total += i
+    return total
+
+# Artıq train_model() çağırılanda wrapper() çağırılacaq
+result = train_model(10)
+# ⏱ train_model() 0.0523 saniyədə tamamlandı
 ```
 
----
+> [!tip] **Best Practice — `functools.wraps` Həmişə İstifadə Edin**
+> `@functools.wraps(func)` olmadan, wrapper funksiyası orijinal funksiyanın `__name__`, `__doc__`, `__module__` kimi atributlarını itirər. Bu, debugging və documentation alətlərini pozar. **Hər decorator-da** `@functools.wraps` istifadə etmək qızıl qaydadır.
 
-#### Logging (Qeyd etmə) Dekoratoru
+### 3.5 Parametrli Decorator
+
+Əgər decorator-un özünə parametr ötürmək lazımdırsa, **üç qat iç-içə funksiya** lazımdır: xarici funksiya parametrləri alır, ortadakı funksiyanı (dekoratoru) qaytarır, daxili wrapper isə orijinal funksiyanı əhatə edir.
 
 ```python
-def loglayan(funksiya):
-    def sarğı(*args, **kwargs):
-        print(f"[LOG] {funksiya.__name__} çağırıldı. Args: {args}, Kwargs: {kwargs}")
-        nəticə = funksiya(*args, **kwargs)
-        print(f"[LOG] {funksiya.__name__} nəticə qaytardı: {nəticə}")
-        return nəticə
-    return sarğı
+import functools
 
-@loglayan
-def cəm(a, b):
+def retry(max_attempts=3, delay=1.0):
+    """
+    Uğursuz funksiyanı verilmiş sayda təkrar cəhd edən decorator.
+
+    Args:
+        max_attempts: Maksimum cəhd sayı (default: 3)
+        delay: Cəhdlər arası gözləmə müddəti, saniyə (default: 1.0)
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    print(f"⚠ {func.__name__}() — Cəhd {attempt}/{max_attempts} uğursuz: {e}")
+                    if attempt < max_attempts:
+                        import time
+                        time.sleep(delay)
+            # Bütün cəhdlər uğursuz oldu
+            raise last_exception
+        return wrapper
+    return decorator
+
+# İstifadə — parametrlərlə
+@retry(max_attempts=5, delay=0.5)
+def fetch_api_data(url):
+    """API-dan data alır — şəbəkə xətası ola bilər."""
+    import random
+    if random.random() < 0.7:    # 70% ehtimalla xəta simulyasiyası
+        raise ConnectionError(f"Əlaqə uğursuz: {url}")
+    return {"status": "success", "data": [1, 2, 3]}
+
+# result = fetch_api_data("https://api.example.com/data")
+```
+
+### 3.6 Birdən Çox Decorator Tətbiqi (Stacking)
+
+Bir funksiyaya birdən çox decorator tətbiq etmək mümkündür. Dekoratorlar **aşağıdan yuxarıya** tətbiq olunur, amma **yuxarıdan aşağıya** icra olunur.
+
+```python
+import functools
+import time
+
+def timer(func):
+    """İcra müddətini ölçür."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        print(f"⏱ {func.__name__}: {elapsed:.4f}s")
+        return result
+    return wrapper
+
+def log_call(func):
+    """Funksiya çağırışını log edir."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"📋 {func.__name__}() çağırıldı — args={args}, kwargs={kwargs}")
+        result = func(*args, **kwargs)
+        print(f"✅ {func.__name__}() nəticə qaytardı: {result}")
+        return result
+    return wrapper
+
+def validate_positive(func):
+    """Bütün ədədi arqumentlərin müsbət olduğunu yoxlayır."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        for arg in args:
+            if isinstance(arg, (int, float)) and arg < 0:
+                raise ValueError(f"Mənfi dəyər icazə verilmir: {arg}")
+        return func(*args, **kwargs)
+    return wrapper
+
+# Stacking — dekoratorlar aşağıdan yuxarıya tətbiq olunur:
+# 1. validate_positive(calculate_loss) → wrapped_1
+# 2. log_call(wrapped_1) → wrapped_2
+# 3. timer(wrapped_2) → wrapped_3 (final)
+@timer               # 3-cü (ən xarici) — əvvəl icra olunur
+@log_call            # 2-ci (ortada)
+@validate_positive   # 1-ci (ən daxili) — orijinala ən yaxın
+def calculate_loss(predictions, targets):
+    """MSE loss hesablayır."""
+    n = len(predictions)
+    return sum((p - t) ** 2 for p, t in zip(predictions, targets)) / n
+
+loss = calculate_loss([2.5, 0.0, 2.1], [3.0, -0.5, 2.0])
+# ⏱ calculate_loss: 0.0001s
+# 📋 calculate_loss() çağırıldı — args=([2.5, 0.0, 2.1], [3.0, -0.5, 2.0]), kwargs={}
+# ✅ calculate_loss() nəticə qaytardı: 0.17333333333333334
+```
+
+### 3.7 Praktik Decorator Nümunələri
+
+#### Cache / Memoization Decorator
+
+```python
+import functools
+
+def memoize(func):
+    """
+    Funksiyanın nəticələrini cache-ləyən decorator (memoization).
+
+    Eyni arqumentlərlə təkrar çağırışlarda hesablama əvəzinə
+    cache-dən nəticəni qaytarır. Rekursiv funksiyalarda dramatik
+    performans artımı təmin edir.
+    """
+    cache = {}
+
+    @functools.wraps(func)
+    def wrapper(*args):
+        if args in cache:
+            print(f"  Cache hit: {func.__name__}{args}")
+            return cache[args]
+        print(f"  Computing: {func.__name__}{args}")
+        result = func(*args)
+        cache[args] = result
+        return result
+
+    wrapper.cache = cache         # Cache-ə xaricdən müraciət imkanı
+    wrapper.clear_cache = cache.clear  # Cache-i təmizləmə funksiyası
+    return wrapper
+
+@memoize
+def fibonacci(n):
+    """N-ci Fibonacci ədədini hesablayır (rekursiv)."""
+    if n < 2:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+print(fibonacci(10))
+# İlk çağırış: hər dəyər hesablanır
+# Sonrakı çağırışlar: cache-dən alınır
+# Memoize olmadan: O(2^n) — eksponensial
+# Memoize ilə: O(n) — xətti
+
+# Python-un daxili cache decorator-u (daha effektiv):
+# @functools.lru_cache(maxsize=128)
+```
+
+> [!tip] **Best Practice — `functools.lru_cache`**
+> Öz memoize decorator-unuzu yazmaq əvəzinə, Python-un daxili `@functools.lru_cache(maxsize=128)` dekoratorunu istifadə edin. Bu, **LRU (Least Recently Used)** strategiyası ilə cache idarəsi, thread-safety və `cache_info()` kimi əlavə funksionallıq təqdim edir. Python 3.9+-da `@functools.cache` (limitsiz cache) də mövcuddur.
+
+#### Type Checking Decorator
+
+```python
+import functools
+from typing import get_type_hints
+
+def enforce_types(func):
+    """
+    Type hint-ləri runtime-da yoxlayan decorator.
+
+    Python-un type hint-ləri default olaraq runtime-da icra olunmur.
+    Bu decorator onları aktiv yoxlamaya çevirir — development
+    və testing mərhələlərində faydalıdır.
+    """
+    hints = get_type_hints(func)
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Parametr adları ilə dəyərləri eşlə
+        import inspect
+        sig = inspect.signature(func)
+        bound = sig.bind(*args, **kwargs)
+        bound.apply_defaults()
+
+        # Hər parametrin tipini yoxla
+        for param_name, value in bound.arguments.items():
+            if param_name in hints:
+                expected_type = hints[param_name]
+                if not isinstance(value, expected_type):
+                    raise TypeError(
+                        f"'{param_name}' parametri {expected_type.__name__} tipli olmalıdır, "
+                        f"lakin {type(value).__name__} verildi"
+                    )
+
+        result = func(*args, **kwargs)
+
+        # Return tipini yoxla
+        if 'return' in hints and not isinstance(result, hints['return']):
+            raise TypeError(
+                f"Qaytarma dəyəri {hints['return'].__name__} tipli olmalıdır, "
+                f"lakin {type(result).__name__} qaytarıldı"
+            )
+
+        return result
+
+    return wrapper
+
+@enforce_types
+def add_numbers(a: int, b: int) -> int:
     return a + b
 
-cəm(3, 5)
-# [LOG] cəm çağırıldı. Args: (3, 5), Kwargs: {}
-# [LOG] cəm nəticə qaytardı: 8
+print(add_numbers(5, 3))       # 8 — düzgün tiplər
+# add_numbers("5", 3)          # TypeError: 'a' parametri int tipli olmalıdır
 ```
+
+### 3.8 Dekoratorların Tətbiq Sahələri
+
+| İstifadə Sahəsi | Nümunə | İzah |
+|---|---|---|
+| **Logging** | `@log_call` | Funksiya çağırışlarını qeyd edir |
+| **Timing** | `@timer` | İcra müddətini ölçür |
+| **Caching** | `@lru_cache` | Nəticələri cache-ləyir |
+| **Retry** | `@retry(max=3)` | Uğursuz əməliyyatı təkrarlayır |
+| **Authentication** | `@login_required` | Web framework-lərdə giriş yoxlaması |
+| **Rate Limiting** | `@rate_limit(calls=100)` | API çağırış sayını məhdudlaşdırır |
+| **Validation** | `@validate_input` | Giriş məlumatlarını yoxlayır |
+| **Deprecation** | `@deprecated("Use X instead")` | Köhnəlmiş funksiyalar üçün xəbərdarlıq |
 
 ---
 
-#### Giriş Yoxlama Dekoratoru
+## 4. Comprehensions vs Generators vs Regular Loops Müqayisəsi
 
-```python
-def giriş_tələb_et(funksiya):
-    def sarğı(istifadəçi, *args, **kwargs):
-        if not istifadəçi.get("aktiv"):
-            raise PermissionError("Giriş qadağandır!")
-        return funksiya(istifadəçi, *args, **kwargs)
-    return sarğı
-
-@giriş_tələb_et
-def profil_göstər(istifadəçi):
-    print(f"Profil: {istifadəçi['ad']}")
-
-aktiv_user   = {"ad": "Anar", "aktiv": True}
-qeyri_aktiv  = {"ad": "Zəhra", "aktiv": False}
-
-profil_göstər(aktiv_user)    # Profil: Anar
-profil_göstər(qeyri_aktiv)   # PermissionError: Giriş qadağandır!
-```
-
----
-
-#### Cəhd Sayı Dekoratoru (Retry)
-
-```python
-import random
-
-def yenidən_cəhd(cəhd_sayı=3):
-    def dekorator(funksiya):
-        def sarğı(*args, **kwargs):
-            for i in range(cəhd_sayı):
-                try:
-                    return funksiya(*args, **kwargs)
-                except Exception as e:
-                    print(f"Cəhd {i+1}/{cəhd_sayı} uğursuz: {e}")
-            raise Exception("Bütün cəhdlər uğursuz oldu!")
-        return sarğı
-    return dekorator
-
-@yenidən_cəhd(cəhd_sayı=3)
-def etibarsız_funksiya():
-    if random.random() < 0.7:
-        raise ConnectionError("Server cavab vermir")
-    return "Uğurlu!"
-
-print(etibarsız_funksiya())
-```
-
----
-
-### 3.7 `functools.wraps` — Metadata-nı Qorumaq
-
-Decorator tətbiq edildikdə funksiyanın adı və docstring-i **itirilir** — bunu `functools.wraps` ilə həll etmək olar:
-
-```python
-def dekorator(funksiya):
-    def sarğı(*args, **kwargs):   # Adı "sarğı"dır!
-        return funksiya(*args, **kwargs)
-    return sarğı
-
-@dekorator
-def mənim_funksiyam():
-    """Bu mənim funksiyamdır."""
-    pass
-
-print(mənim_funksiyam.__name__)   # "sarğı" ← yanlış!
-print(mənim_funksiyam.__doc__)    # None    ← itib!
-```
-
-```python
-from functools import wraps
-
-def dekorator(funksiya):
-    @wraps(funksiya)              # ← Metadata qorunur
-    def sarğı(*args, **kwargs):
-        return funksiya(*args, **kwargs)
-    return sarğı
-
-@dekorator
-def mənim_funksiyam():
-    """Bu mənim funksiyamdır."""
-    pass
-
-print(mənim_funksiyam.__name__)   # "mənim_funksiyam" ✅
-print(mənim_funksiyam.__doc__)    # "Bu mənim funksiyamdır." ✅
-```
-
-> 💡 **Praktiki qayda:** Real layihələrdə həmişə `@wraps` istifadə et.
-
----
-
-### 3.8 Arqumentli Dekoratorlar
-
-Dekoratorun özü də parametr qəbul edə bilər — bu zaman **üç qat iç-içə funksiya** lazımdır:
-
-```python
-from functools import wraps
-
-def təkrarla(dəfə):           # ← Dekorator fabrikası (parametr qəbul edir)
-    def dekorator(funksiya):  # ← Əsl dekorator
-        @wraps(funksiya)
-        def sarğı(*args, **kwargs):   # ← Sarğı funksiya
-            for _ in range(dəfə):
-                nəticə = funksiya(*args, **kwargs)
-            return nəticə
-        return sarğı
-    return dekorator
-
-@təkrarla(dəfə=3)
-def salam():
-    print("Salam!")
-
-salam()
-# Salam!
-# Salam!
-# Salam!
-```
-
----
-
-### 3.9 Çoxlu Dekoratorların Tətbiqi
-
-Bir funksiyaya birdən çox dekorator tətbiq oluna bilər. **Sıra önəmlidir** — aşağıdan yuxarı tətbiq edilir, yuxarıdan aşağı çalışır.
-
-```python
-from functools import wraps
-
-def dekorator_A(f):
-    @wraps(f)
-    def sarğı(*a, **kw):
-        print("A — əvvəl")
-        nəticə = f(*a, **kw)
-        print("A — sonra")
-        return nəticə
-    return sarğı
-
-def dekorator_B(f):
-    @wraps(f)
-    def sarğı(*a, **kw):
-        print("B — əvvəl")
-        nəticə = f(*a, **kw)
-        print("B — sonra")
-        return nəticə
-    return sarğı
-
-@dekorator_A      # ← ikinci tətbiq olunan
-@dekorator_B      # ← birinci tətbiq olunan
-def funksiya():
-    print("Əsl funksiya")
-
-funksiya()
-# A — əvvəl      ← A xarici sarğı
-# B — əvvəl      ← B daxili sarğı
-# Əsl funksiya
-# B — sonra
-# A — sonra
-```
-
-**Tətbiq sırası:**
-```
-@A         →    funksiya = A(B(funksiya))
-@B
-def funksiya
-```
-
----
-
-### 3.10 Sinif ilə Decorator
-
-Funksiya əvəzinə sinif istifadə edərək da decorator yaratmaq mümkündür — `__call__` metodunu tətbiq etməklə:
-
-```python
-from functools import wraps
-
-class zamanlayıcı:
-    def __init__(self, funksiya):
-        self.funksiya = funksiya
-        wraps(funksiya)(self)
-
-    def __call__(self, *args, **kwargs):
-        import time
-        başlanğıc = time.time()
-        nəticə = self.funksiya(*args, **kwargs)
-        print(f"Vaxt: {time.time() - başlanğıc:.4f}s")
-        return nəticə
-
-@zamanlayıcı
-def hesabla():
-    return sum(range(1_000_000))
-
-hesabla()   # Vaxt: 0.0412s
-```
-
----
-
-## Ümumi Müqayisə Cədvəli
-
-| Xüsusiyyət | List Comprehension | Generator | Decorator |
+| Xüsusiyyət | `for` Loop | List Comprehension | Generator Expression |
 |---|---|---|---|
-| Məqsəd | Yeni list yaratmaq | Lazy ardıcıllıq | Funksiyaya davranış əlavə etmək |
-| Yaddaş | Hamısı birdən | Bir-bir, tələbdə | Funksiyayla eyni |
-| Sintaksis | `[x for x in ...]` | `(x for x in ...)` / `yield` | `@funksiya_adı` |
-| Bir dəfəlik? | ❌ (təkrar istifadə olar) | ✅ (tükənir) | — |
-| İstifadə sahəsi | Filtrasiya, çevirmə | Böyük data, pipeline | Logging, auth, cache, timing |
+| **Sintaksis** | Çox sətirli | Tək sətirli `[...]` | Tək sətirli `(...)` |
+| **Nəticə** | Dəyişənə əl ilə əlavə | Yeni list | Lazy iterator |
+| **Yaddaş** | List yaransa — O(n) | O(n) | O(1) |
+| **Sürət** | Normal | ~30% daha sürətli | Bütün nəticə lazımdırsa — eyni |
+| **Oxunaqlılıq** | Ən aydın | Qısa, amma complex-ləşə bilər | Qısa |
+| **Reusability** | — | İstənilən qədər | Yalnız bir dəfə |
+| **İstifadə halı** | Mürəkkəb məntiq, side effects | Transformasiya + filtrasiya | Böyük data, pipeline |
 
 ---
 
-## Xülasə
+## 5. Gün 3 — Xülasə
 
-```python
-# List Comprehension — Bir sətirdə list yarat
-kvadratlar = [x**2 for x in range(10) if x % 2 == 0]
+| Mövzu | Əsas Nöqtə |
+|---|---|
+| **List Comprehension** | `for` loop-un kompakt, sürətli alternativi; list, dict, set versiyaları var |
+| **Generator** | Lazy evaluation — yaddaş effektiv; `yield` ilə yaradılır |
+| **Generator Expression** | Comprehension-ın lazy versiyası; `()` mötərizə ilə |
+| **Generator Pipeline** | Generatorları zəncirləyərək data processing pipeline yaratmaq |
+| **First-Class Functions** | Funksiyalar dəyişənə təyin oluna, parametr olaraq ötürülə bilər |
+| **Closures** | Daxili funksiyanın xarici funksiyanın dəyişənlərini "yadda saxlaması" |
+| **Decorators** | Funksiyanın davranışını kodunu dəyişmədən genişləndirmək; `@` sintaksisi |
+| **functools.wraps** | Decorator-da həmişə istifadə edin — orijinal atributları qoruyur |
 
-# Generator — Tənbəl, yaddaş-effektiv ardıcıllıq
-def sonsuz():
-    n = 0
-    while True:
-        yield n
-        n += 1
+---
 
-# Decorator — Funksiyaya toxunmadan davranış əlavə et
-from functools import wraps
-
-def loglayan(f):
-    @wraps(f)
-    def sarğı(*args, **kwargs):
-        print(f"{f.__name__} çağırıldı")
-        return f(*args, **kwargs)
-    return sarğı
-
-@loglayan
-def hesabla(x, y):
-    return x + y
-```
+> [!note] **Növbəti Həftə**
+> **Həftə 2, Gün 1**-də Python-un fayl əməliyyatları (File I/O) və xətaların idarə edilməsi (Exception Handling) mövzularına keçəcəyik — faylları oxuma/yazma, kontekst menecerləri (`with` ifadəsi) və try/except/finally blokları ilə.
